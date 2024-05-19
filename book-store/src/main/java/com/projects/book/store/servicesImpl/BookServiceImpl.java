@@ -64,7 +64,18 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseEntity<?> updateBook(BookDTO book) {
-       Boo
+        Optional<Book> bookToUpdate = bookRepository.findById(book.getId());
+        if (bookToUpdate.isEmpty())
+            throw new NotFound(Messages.BOOK_NOT_FOUND);
+        Book bookUpdated = bookToUpdate.get();
+        bookUpdated.setIsbn(book.getIsbn());
+        bookUpdated.setTitle(book.getTitle());
+        bookUpdated.setAuthor(book.getAuthor());
+        bookUpdated.setPrice(book.getPrice());
+        bookUpdated.setPublicationYear(book.getPublicationYear());
+        BookDTO responseBookDTO = mapper.map(bookUpdated, BookDTO.class);
+        return ResponseEntity.ok(responseBookDTO);
+
     }
 
 }
